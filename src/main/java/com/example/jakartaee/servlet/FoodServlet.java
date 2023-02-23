@@ -23,6 +23,7 @@ public class FoodServlet extends HttpServlet {
     @Inject
     Jsonb jsonb;
 
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 

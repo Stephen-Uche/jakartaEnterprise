@@ -1,4 +1,4 @@
-package com.example.jakartaee;
+package com.example.jakartaee.servlet;
 
 import jakarta.inject.Inject;
 import jakarta.servlet.annotation.WebServlet;
