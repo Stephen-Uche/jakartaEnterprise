@@ -36,9 +36,9 @@ public class FoodRepository {
     }
 
 
-
-
-
-
-
+    public List<Food> findAllByName(String name) {
+        var query = entityManager.createQuery("select f from Food f where f.name like :name");
+        query.setParameter("name", name);
+        return (List<Food>) query.getResultList();
+    }
 }
