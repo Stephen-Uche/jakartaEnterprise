@@ -35,6 +35,15 @@ public class FoodRepository {
         food.ifPresent((f)-> entityManager.remove(f));
     }
 
+    public Food update(Long id, Food food){
+        var entity = entityManager.find(Food.class, id);
+        entity.setName(food.getName());
+        entity.setCategory(food.getCategory());
+        entity.setPrice(food.getPrice());
+        entityManager.persist(entity);
+        return entity;
+    }
+
 
     public List<Food> findAllByName(String name) {
         var query = entityManager.createQuery("select f from Food f where f.name like :name");

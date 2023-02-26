@@ -24,8 +24,8 @@ public class FoodController {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<FoodDto> getAll(@QueryParam("name") String name){
-        if( name == null)
+    public List<FoodDto> getAll(@QueryParam("name") String name) {
+        if (name == null)
             return mapper.map(repository.findAll());
 
         return mapper.map(repository.findAllByName(name));
@@ -34,27 +34,34 @@ public class FoodController {
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getOne(@PathParam("id") Long id){
+    public Response getOne(@PathParam("id") Long id) {
         var food = repository.findOne(id);
-        if( food.isPresent())
+        if (food.isPresent())
             return Response.ok().entity(food.get()).build();
         return Response.status(404).build();
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response addOne(@Valid Food food){
-      // if(!validator.validate(food))
-      //      return Response.status(400,"name can't be null or empty").build();
+    public Response addOne(@Valid Food food) {
+        // if(!validator.validate(food))
+        //      return Response.status(400,"name can't be null or empty").build();
         repository.insertFood(food);
         return Response.created(URI.create("foods/" + food.getId())).build();
     }
 
     @DELETE
     @Path("/{id}")
-    public void deleteOne(@PathParam("id") Long id){
+    public void deleteOne(@PathParam("id") Long id) {
         repository.deleteFood(id);
     }
 
 
+    @PUT
+    @Path("/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response updDate(@PathParam("id") Long id, FoodDto food) {
+        return Response.ok().entity(mapper.map(repository.update(id, mapper.map(food)))).build();
+    }
 }
