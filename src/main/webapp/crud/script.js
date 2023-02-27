@@ -6,18 +6,13 @@ var crudApp = new function () {
     this.myData = []
 
     this.category = ['Fruits', 'Vegetables', 'Grains', 'Protein', 'Dairy'];
-    this.col = [];
+
     this.headers = ["id", "name", "category", "price"];
 
 
     this.createTable = async function () {
 
-        this.col = [];
-
         this.myData = await fetchAllJSON();
-        // Extract value for table header.
-        for (var key of this.headers)
-            this.col.push(Object.keys(this.myData[0]).indexOf(key));
 
         // CREATE A TABLE.
         var table = document.createElement('table');
@@ -91,7 +86,7 @@ var crudApp = new function () {
 
         tr = table.insertRow(-1);           // CREATE THE LAST ROW.
 
-        for (var j = 0; j < this.col.length; j++) {
+        for (var j = 0; j < this.headers.length; j++) {
             var newCell = tr.insertCell(-1);
             if (j >= 1) {
 
@@ -147,7 +142,7 @@ var crudApp = new function () {
 
         var tab = document.getElementById('dataTable').rows[activeRow];
 
-        for (i = 0; i < this.col.length; i++) {
+        for (i = 0; i < this.headers.length; i++) {
             var td = tab.getElementsByTagName("td")[i];
             td.innerHTML = this.myData[(activeRow - 1)][this.headers[i]];
         }
@@ -204,7 +199,7 @@ var crudApp = new function () {
         var tab = document.getElementById('dataTable').rows[activeRow];
 
         // UPDATE myData ARRAY WITH VALUES.
-        for (i = 1; i < this.col.length; i++) {
+        for (i = 1; i < this.headers.length; i++) {
             var td = tab.getElementsByTagName("td")[i];
             if (td.childNodes[0].getAttribute('type') == 'text' || td.childNodes[0].tagName == 'SELECT') {
                 this.myData[(activeRow - 1)][this.headers[i]] = td.childNodes[0].value;
@@ -220,7 +215,7 @@ var crudApp = new function () {
         var tab = document.getElementById('dataTable').rows[activeRow];
         var obj = {};
 
-        for (i = 1; i < this.col.length; i++) {
+        for (i = 1; i < this.headers.length; i++) {
             var td = tab.getElementsByTagName("td")[i];
             if (td.childNodes[0].getAttribute('type') === 'text' || td.childNodes[0].tagName === 'SELECT') {
                 var txtVal = td.childNodes[0].value;
