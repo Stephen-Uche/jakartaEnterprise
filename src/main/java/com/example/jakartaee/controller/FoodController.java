@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
@@ -25,6 +26,9 @@ public class FoodController {
 
     @Inject
     Mapper mapper;
+
+    @Inject
+    Client client;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -72,5 +76,14 @@ public class FoodController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response updDate(@PathParam("id") Long id, FoodDto food) {
         return Response.ok().entity(mapper.map(repository.update(id, mapper.map(food)))).build();
+    }
+
+    @GET
+    @Path("/extra")
+    @Produces(MediaType.APPLICATION_JSON)
+    public FoodDto extraEndpoint(){
+        return client.target("http://localhost:8080/api/foods/17")
+                .request(MediaType.APPLICATION_JSON)
+                .get(FoodDto.class);
     }
 }
