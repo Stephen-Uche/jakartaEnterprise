@@ -4,6 +4,10 @@ import com.example.jakartaee.dto.FoodDto;
 import com.example.jakartaee.entity.Food;
 import com.example.jakartaee.mapper.Mapper;
 import com.example.jakartaee.repository.FoodRepository;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
@@ -34,11 +38,16 @@ public class FoodController {
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Returns food object",
+                    content = @Content(schema = @Schema(implementation = FoodDto.class))),
+            @ApiResponse(responseCode = "404", description = "Id not found")})
     public Response getOne(@PathParam("id") Long id) {
         var food = repository.findOne(id);
         if (food.isPresent())
             return Response.ok().entity(food.get()).build();
-        return Response.status(404).build();
+        //throw new IdNotFoundException("Not found Id: " + id);
+        throw new NotFoundException("Id: " + id);
     }
 
     @POST
