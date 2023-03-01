@@ -1,10 +1,15 @@
+FROM maven:3.9.0-eclipse-temurin-19 AS tjohej
+COPY src /app/src
+COPY pom.xml /app
+RUN mvn --file /app/pom.xml clean package
+
 FROM quay.io/wildfly/wildfly:27.0.1.Final-jdk19
 ENV WILDFLY_CLI /opt/jboss/wildfly/bin/jboss-cli.sh
 ENV WILDFLY_HOME /opt/jboss/wildfly
 ENV WILDFLY_USER admin
 ENV WILDFLY_PASS adminpw
-ENV DB_USER developer
-ENV DB_PASS password
+ARG DB_USER
+ARG DB_PASS
 ENV DB_URI host.docker.internal:3306
 ENV DB_NAME demo
 
@@ -34,5 +39,5 @@ RUN bash -c '$WILDFLY_HOME/bin/standalone.sh &' && \
       rm -rf $WILDFLY_HOME/standalone/configuration/standalone_xml_history/ $WILDFLY_HOME/standalone/log/* && \
       rm -f /tmp/*.jar
 
-COPY target/jakartaee.war /opt/jboss/wildfly/standalone/deployments/
-CMD ["/opt/jboss/wildfly/bin/standalone.sh", "-b", "0.0.0.0", "-bmanagement", "0.0.0.0"]
+COPY --from=tjohej /app/target/*.war /opt/jboss/wildfly/standalone/deployments/
+#CMD ["/opt/jboss/wildfly/bin/standalone.sh", "-b", "0.0.0.0", "-bmanagement", "0.0.0.0"]
