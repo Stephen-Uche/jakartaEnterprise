@@ -1,4 +1,4 @@
-FROM maven:3.9.0-eclipse-temurin-19 AS tjohej
+FROM maven:3.9.0-eclipse-temurin-19 AS build
 COPY src /app/src
 COPY pom.xml /app
 RUN mvn --file /app/pom.xml clean package
@@ -39,5 +39,5 @@ RUN bash -c '$WILDFLY_HOME/bin/standalone.sh &' && \
       rm -rf $WILDFLY_HOME/standalone/configuration/standalone_xml_history/ $WILDFLY_HOME/standalone/log/* && \
       rm -f /tmp/*.jar
 
-COPY --from=tjohej /app/target/*.war /opt/jboss/wildfly/standalone/deployments/
+COPY --from=build /app/target/*.war /opt/jboss/wildfly/standalone/deployments/
 #CMD ["/opt/jboss/wildfly/bin/standalone.sh", "-b", "0.0.0.0", "-bmanagement", "0.0.0.0"]
