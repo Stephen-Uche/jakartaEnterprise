@@ -27,8 +27,8 @@ public class FoodController {
     @Inject
     Mapper mapper;
 
-    @Inject
-    Client client;
+//    @Inject
+//    Client client;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -50,15 +50,12 @@ public class FoodController {
         var food = repository.findOne(id);
         if (food.isPresent())
             return Response.ok().entity(food.get()).build();
-        //throw new IdNotFoundException("Not found Id: " + id);
         throw new NotFoundException("Id: " + id);
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response addOne(@Valid Food food) {
-        // if(!validator.validate(food))
-        //      return Response.status(400,"name can't be null or empty").build();
         repository.insertFood(food);
         return Response.created(URI.create("foods/" + food.getId())).build();
     }
@@ -78,12 +75,12 @@ public class FoodController {
         return Response.ok().entity(mapper.map(repository.update(id, mapper.map(food)))).build();
     }
 
-    @GET
-    @Path("/extra")
-    @Produces(MediaType.APPLICATION_JSON)
-    public FoodDto extraEndpoint(){
-        return client.target("http://localhost:8080/api/foods/17")
-                .request(MediaType.APPLICATION_JSON)
-                .get(FoodDto.class);
-    }
+//    @GET
+//    @Path("/extra")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public FoodDto extraEndpoint(){
+//        return client.target("http://localhost:8080/api/foods/17")
+//                .request(MediaType.APPLICATION_JSON)
+//                .get(FoodDto.class);
+//    }
 }

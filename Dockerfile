@@ -8,9 +8,9 @@ ENV WILDFLY_CLI /opt/jboss/wildfly/bin/jboss-cli.sh
 ENV WILDFLY_HOME /opt/jboss/wildfly
 ENV WILDFLY_USER admin
 ENV WILDFLY_PASS adminpw
-ARG DB_USER
-ARG DB_PASS
-ENV DB_URI host.docker.internal:3306
+ENV DB_USER developer
+ENV DB_PASS password
+ENV DB_URI 192.168.1.109:3306
 ENV DB_NAME demo
 
 RUN $WILDFLY_HOME/bin/add-user.sh --silent=true $WILDFLY_USER $WILDFLY_PASS ManagementRealm
@@ -40,4 +40,3 @@ RUN bash -c '$WILDFLY_HOME/bin/standalone.sh &' && \
       rm -f /tmp/*.jar
 
 COPY --from=build /app/target/*.war /opt/jboss/wildfly/standalone/deployments/
-#CMD ["/opt/jboss/wildfly/bin/standalone.sh", "-b", "0.0.0.0", "-bmanagement", "0.0.0.0"]
