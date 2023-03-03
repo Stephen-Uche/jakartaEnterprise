@@ -1,4 +1,4 @@
-const baseUrl = 'http://localhost:8080/api/foods';
+const baseUrl = window.location.origin + '/api/foods';
 
 var crudApp = new function () {
 
@@ -29,10 +29,10 @@ var crudApp = new function () {
         // Add rows using JSON data.
         for (var i = 0; i < this.myData.length; i++) {
             tr = table.insertRow(-1);           // Create a new row.
-            for (var j = 0; j < this.headers.length; j++) {
+            this.headers.forEach(item => {
                 var tabCell = tr.insertCell(-1);
-                tabCell.innerHTML = this.myData[i][this.headers[j]];
-            }
+                tabCell.innerHTML = this.myData[i][item];
+            });
 
             // Dynamically create and add elements to table cells with events.
 
@@ -150,14 +150,16 @@ var crudApp = new function () {
 
     // EDIT DATA.
     this.Update = function (oButton) {
+        var td;
+        var ele;
         var activeRow = oButton.parentNode.parentNode.rowIndex;
         var tab = document.getElementById('dataTable').rows[activeRow];
 
         // SHOW A DROPDOWN LIST WITH A LIST OF CATEGORIES.
         for (i = 1; i < 4; i++) {
-            if (i == 2) {
-                var td = tab.getElementsByTagName("td")[i];
-                var ele = document.createElement('select');      // DROPDOWN LIST.
+            if (i === 2) {
+                td = tab.getElementsByTagName("td")[i];
+                ele = document.createElement('select');      // DROPDOWN LIST.
                 ele.innerHTML = '<option value="' + td.innerText + '">' + td.innerText + '</option>';
                 for (k = 0; k < this.category.length; k++) {
                     ele.innerHTML = ele.innerHTML + '<option value="' + this.category[k] + '">' + this.category[k] + '</option>';
@@ -165,8 +167,8 @@ var crudApp = new function () {
                 td.innerText = '';
                 td.appendChild(ele);
             } else {
-                var td = tab.getElementsByTagName("td")[i];
-                var ele = document.createElement('input');      // TEXTBOX.
+                td = tab.getElementsByTagName("td")[i];
+                ele = document.createElement('input');      // TEXTBOX.
                 ele.setAttribute('type', 'text');
                 ele.setAttribute('value', td.innerText);
                 td.innerText = '';
@@ -201,7 +203,7 @@ var crudApp = new function () {
         // UPDATE myData ARRAY WITH VALUES.
         for (i = 1; i < this.headers.length; i++) {
             var td = tab.getElementsByTagName("td")[i];
-            if (td.childNodes[0].getAttribute('type') == 'text' || td.childNodes[0].tagName == 'SELECT') {
+            if (td.childNodes[0].getAttribute('type') === 'text' || td.childNodes[0].tagName === 'SELECT') {
                 this.myData[(activeRow - 1)][this.headers[i]] = td.childNodes[0].value;
             }
         }
